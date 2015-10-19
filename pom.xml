@@ -10,12 +10,6 @@
 
     <name>CDI-int</name>
 
-    <repositories>
-        <repository>
-            <id>mavendef</id>
-            <url>http://repo.maven.apache.org/maven2/</url>
-        </repository>
-    </repositories>
 
     <properties>
         <weld.version>2.2.14.Final</weld.version>
