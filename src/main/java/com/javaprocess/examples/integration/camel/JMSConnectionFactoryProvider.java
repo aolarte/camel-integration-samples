@@ -3,23 +3,28 @@ package com.javaprocess.examples.integration.camel;
 import org.apache.activemq.ActiveMQConnectionFactory;
 import org.apache.activemq.broker.BrokerService;
 
-import javax.enterprise.context.ApplicationScoped;
+import javax.annotation.PostConstruct;
+import javax.annotation.PreDestroy;
 import javax.enterprise.inject.Produces;
 import javax.inject.Inject;
+import javax.inject.Singleton;
 import javax.jms.ConnectionFactory;
 
 /**
  * Created by andres.olarte on 8/4/15.
  */
-@ApplicationScoped
+@Singleton
 public class JMSConnectionFactoryProvider {
 
-    String connectionString="tcp://localhost:61616";
+    @Inject
+    ApplicationConfig applicationConfig;
+
+    String connectionString = "tcp://localhost:61616";
 
     BrokerService broker;
 
-    @Inject
-    public JMSConnectionFactoryProvider(ApplicationConfig applicationConfig) throws Exception {
+    @PostConstruct
+    public void init() throws Exception {
         if (applicationConfig.isServer()) {
             broker = new BrokerService();
             broker.addConnector(connectionString);
@@ -34,6 +39,14 @@ public class JMSConnectionFactoryProvider {
                 connectionString);
         return connectionFactory;
 
+    }
+
+    @PreDestroy
+    public void shutdown() throws Exception {
+        if (broker != null) {
+            System.out.println("Stop ActiveMQ");
+            broker.stop();
+        }
     }
 
 
