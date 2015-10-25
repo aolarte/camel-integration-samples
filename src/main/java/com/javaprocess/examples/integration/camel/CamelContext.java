@@ -34,6 +34,7 @@ public class CamelContext {
     @Inject
     ApplicationConfig applicationConfig;
 
+
     RouteBuilder directCamelRouteRoute = new RouteBuilder() {
         @Override
         public void configure() throws Exception {
@@ -45,14 +46,14 @@ public class CamelContext {
     RouteBuilder jmsClientCamelRoute = new RouteBuilder() {
         @Override
         public void configure() throws Exception {
-            from("direct:order").to("jms:queue:order").setExchangePattern(ExchangePattern.InOut);
+            from("direct:order").to( "jms:queue:order", "bean:claimCheckOut").setExchangePattern(ExchangePattern.InOut);
         }
     };
 
     RouteBuilder jmsServerCamelRoute = new RouteBuilder() {
         @Override
         public void configure() throws Exception {
-            from("jms:queue:order?concurrentConsumers=5").to("bean:orderServiceHandler");
+            from("jms:queue:order?concurrentConsumers=5").to( "bean:orderServiceHandler", "bean:claimCheckIn");
         }
     };
 

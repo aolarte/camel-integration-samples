@@ -15,5 +15,7 @@ public class ApplicationConfig {
         return Main.argList.contains("client");
     }
 
-    public boolean isServer() { return Main.argList.contains("server"); }
+    public boolean isServer() {
+        return Main.argList.contains("server");
+    }
 }
